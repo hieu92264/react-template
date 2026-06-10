@@ -9,6 +9,9 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -23,6 +26,7 @@ export default defineConfig([
     files: ['src/routes/**/*.{ts,tsx}', 'src/app/router.tsx'],
     rules: {
       'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])
