@@ -1,9 +1,10 @@
 import type React from 'react'
+import { AuthLayout } from '@/components/layouts/AuthLayout'
 
 type BlankLayoutProps = {
   children: React.ReactNode
 }
 
 export const BlankLayout: React.FC<BlankLayoutProps> = ({ children }) => {
-  return <main className="min-h-screen">{children}</main>
+  return <AuthLayout>{children}</AuthLayout>
 }

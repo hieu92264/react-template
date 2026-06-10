@@ -13,6 +13,7 @@ export const AUTH_API = {
   ME: '/auth/me',
   REFRESH: '/auth/refresh',
   LOGOUT: '/auth/logout',
+  FORGOT_PASSWORD: '/auth/forgot-password',
 } as const
 
 export const AuthService = {
@@ -34,5 +35,9 @@ export const AuthService = {
 
   logout() {
     return httpService.post<void>(AUTH_API.LOGOUT)
+  },
+
+  forgotPassword(email: string) {
+    return httpService.post<void, { email: string }>(AUTH_API.FORGOT_PASSWORD, { email })
   },
 }
