@@ -1,17 +1,18 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Loading } from '@/components/ui/loading'
 import { registerSchema, type RegisterFormValues } from '@/features/auth/schemas/register.schema'
 import { useRegister } from '@/features/auth/hooks/use-register'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const RegisterForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-  const { mutate: register, isPending, error } = useRegister()
+  const { mutate: register, isPending } = useRegister()
 
   const {
     register: registerField,
@@ -55,18 +56,6 @@ export const RegisterForm: React.FC = () => {
         </p>
       </div>
 
-      {/* Error Alert */}
-      {error && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/40 dark:bg-red-950/30">
-          <svg className="mt-0.5 h-4 w-4 shrink-0 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-          </svg>
-          <p className="text-sm text-red-600 dark:text-red-400">
-            {(error as any)?.response?.data?.message ?? 'Đăng ký thất bại. Vui lòng thử lại.'}
-          </p>
-        </div>
-      )}
-
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {/* Username */}
@@ -80,11 +69,11 @@ export const RegisterForm: React.FC = () => {
             placeholder="Nhập tên đăng nhập"
             autoComplete="username"
             aria-invalid={!!errors.username}
-            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
+            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-primary focus-visible:ring-primary/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
             {...registerField('username')}
           />
           {errors.username && (
-            <p className="text-xs text-red-500 dark:text-red-400">{errors.username.message}</p>
+            <p className="text-xs text-destructive">{errors.username.message}</p>
           )}
         </div>
 
@@ -99,11 +88,11 @@ export const RegisterForm: React.FC = () => {
             placeholder="example@email.com"
             autoComplete="email"
             aria-invalid={!!errors.email}
-            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
+            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-primary focus-visible:ring-primary/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
             {...registerField('email')}
           />
           {errors.email && (
-            <p className="text-xs text-red-500 dark:text-red-400">{errors.email.message}</p>
+            <p className="text-xs text-destructive">{errors.email.message}</p>
           )}
         </div>
 
@@ -119,7 +108,7 @@ export const RegisterForm: React.FC = () => {
               placeholder="Tối thiểu 8 ký tự"
               autoComplete="new-password"
               aria-invalid={!!errors.password}
-              className="h-9 rounded-lg border-slate-200 bg-white pr-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
+              className="h-9 rounded-lg border-slate-200 bg-white pr-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-primary focus-visible:ring-primary/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
               {...registerField('password')}
             />
             <button
@@ -156,7 +145,7 @@ export const RegisterForm: React.FC = () => {
           )}
 
           {errors.password && (
-            <p className="text-xs text-red-500 dark:text-red-400">{errors.password.message}</p>
+            <p className="text-xs text-destructive">{errors.password.message}</p>
           )}
         </div>
 
@@ -172,7 +161,7 @@ export const RegisterForm: React.FC = () => {
               placeholder="Nhập lại mật khẩu"
               autoComplete="new-password"
               aria-invalid={!!errors.confirm_password}
-              className="h-9 rounded-lg border-slate-200 bg-white pr-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
+              className="h-9 rounded-lg border-slate-200 bg-white pr-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-primary focus-visible:ring-primary/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
               {...registerField('confirm_password')}
             />
             <button
@@ -185,7 +174,7 @@ export const RegisterForm: React.FC = () => {
             </button>
           </div>
           {errors.confirm_password && (
-            <p className="text-xs text-red-500 dark:text-red-400">{errors.confirm_password.message}</p>
+            <p className="text-xs text-destructive">{errors.confirm_password.message}</p>
           )}
         </div>
 
@@ -194,13 +183,10 @@ export const RegisterForm: React.FC = () => {
           type="submit"
           id="register-submit"
           disabled={isPending}
-          className="mt-2 h-9 w-full rounded-lg bg-indigo-600 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-60"
+          className="mt-2 h-9 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Đang tạo tài khoản...
-            </>
+            <Loading size="sm" label="Đang tạo tài khoản..." />
           ) : (
             'Tạo tài khoản'
           )}
@@ -219,7 +205,7 @@ export const RegisterForm: React.FC = () => {
         Đã có tài khoản?{' '}
         <Link
           to="/login"
-          className="font-medium text-indigo-600 transition-colors hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="font-medium text-primary transition-opacity hover:opacity-75"
         >
           Đăng nhập
         </Link>

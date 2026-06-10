@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Loading } from '@/components/ui/loading'
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormValues,
@@ -7,11 +8,11 @@ import {
 import { useForgotPassword } from '@/features/auth/hooks/use-forgot-password'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { ArrowLeft, CheckCircle, Loader2, MailOpen } from 'lucide-react'
+import { ArrowLeft, CheckCircle, MailOpen } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 export const ForgotPasswordForm: React.FC = () => {
-  const { mutate: forgotPassword, isPending, isSuccess, error } = useForgotPassword()
+  const { mutate: forgotPassword, isPending, isSuccess } = useForgotPassword()
 
   const {
     register,
@@ -29,7 +30,6 @@ export const ForgotPasswordForm: React.FC = () => {
   if (isSuccess) {
     return (
       <div className="text-center">
-        {/* Success icon */}
         <div className="mb-5 flex justify-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-950/40">
             <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
@@ -42,11 +42,9 @@ export const ForgotPasswordForm: React.FC = () => {
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
           Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến
         </p>
-        <p className="mt-1 font-medium text-indigo-600 dark:text-indigo-400">
-          {getValues('email')}
-        </p>
+        <p className="mt-1 font-medium text-primary">{getValues('email')}</p>
 
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-left dark:border-amber-900/30 dark:bg-amber-950/20">
+        <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-left dark:border-amber-900/30 dark:bg-amber-950/20">
           <p className="text-xs text-amber-700 dark:text-amber-400">
             💡 Không nhận được email? Kiểm tra thư mục spam hoặc{' '}
             <button
@@ -75,8 +73,8 @@ export const ForgotPasswordForm: React.FC = () => {
     <div>
       {/* Header */}
       <div className="mb-7">
-        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40">
-          <MailOpen className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+          <MailOpen className="h-5 w-5 text-primary" />
         </div>
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
           Quên mật khẩu?
@@ -85,18 +83,6 @@ export const ForgotPasswordForm: React.FC = () => {
           Nhập email để nhận hướng dẫn đặt lại mật khẩu
         </p>
       </div>
-
-      {/* Error Alert */}
-      {error && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/40 dark:bg-red-950/30">
-          <svg className="mt-0.5 h-4 w-4 shrink-0 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-          </svg>
-          <p className="text-sm text-red-600 dark:text-red-400">
-            {(error as any)?.response?.data?.message ?? 'Có lỗi xảy ra. Vui lòng thử lại.'}
-          </p>
-        </div>
-      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
@@ -110,11 +96,11 @@ export const ForgotPasswordForm: React.FC = () => {
             placeholder="example@email.com"
             autoComplete="email"
             aria-invalid={!!errors.email}
-            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
+            className="h-9 rounded-lg border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-primary focus-visible:ring-primary/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500"
             {...register('email')}
           />
           {errors.email && (
-            <p className="text-xs text-red-500 dark:text-red-400">{errors.email.message}</p>
+            <p className="text-xs text-destructive">{errors.email.message}</p>
           )}
         </div>
 
@@ -122,13 +108,10 @@ export const ForgotPasswordForm: React.FC = () => {
           type="submit"
           id="forgot-password-submit"
           disabled={isPending}
-          className="h-9 w-full rounded-lg bg-indigo-600 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-60"
+          className="h-9 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Đang gửi...
-            </>
+            <Loading size="sm" label="Đang gửi..." />
           ) : (
             'Gửi hướng dẫn đặt lại mật khẩu'
           )}
