@@ -1,11 +1,11 @@
 import { queryClient } from '@/app/query-client'
 import { ForbiddenPage } from '@/features/errors/ForbiddenPage'
 import { MaintenancePage } from '@/features/errors/MaintenancePage'
+import { NextErrorFallback } from '@/features/errors/NextErrorBoundary'
 import { NotFoundPage } from '@/features/errors/NotFoundPage'
-import { ServerErrorPage } from '@/features/errors/ServerErrorPage'
 import { routeTree } from '@/routeTree.gen'
 import { QueryClient } from '@tanstack/react-query'
-import { createRouter } from '@tanstack/react-router'
+import { createRouter, type ErrorComponentProps } from '@tanstack/react-router'
 
 export type RouterContext = {
   queryClient: QueryClient
@@ -33,7 +33,7 @@ const getErrorStatus = (error: unknown) => {
   )
 }
 
-function RouterErrorPage({ error }: { error: Error }) {
+function RouterErrorPage({ error, info, reset }: ErrorComponentProps) {
   console.error('Router error:', error)
 
   const status = getErrorStatus(error)
@@ -50,7 +50,7 @@ function RouterErrorPage({ error }: { error: Error }) {
     return <MaintenancePage />
   }
 
-  return <ServerErrorPage />
+  return <NextErrorFallback error={error} info={info} reset={reset} />
 }
 
 export const createAppRouter = (queryClient: QueryClient) => {
